@@ -1,0 +1,37 @@
+.intro-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--color-blue-light);
+  border-radius: var(--radius-medium);
+  padding: 12px 14px;
+  margin: 0 0 12px;
+  animation: pop-in var(--transition-normal);
+}
+
+.intro-tip__lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.intro-tip__line {
+  font-size: 0.88rem;
+  color: var(--color-blue-dark);
+  font-weight: 600;
+}
+
+.intro-tip__dismiss {
+  border: none;
+  background: var(--color-surface);
+  color: var(--color-blue-dark);
+  font-weight: 700;
+  font-size: 0.82rem;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.intro-tip__dismiss:hover { background: var(--color-blue); color: #fff; }

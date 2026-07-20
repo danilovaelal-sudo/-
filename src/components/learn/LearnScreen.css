@@ -16,13 +16,6 @@
   }
 }
 
-.learn-screen__full-table {
-  margin-top: 22px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: left;
-  cursor: pointer;
-  border: none;
+.learn-screen__hint {
+  margin-bottom: 10px;
 }

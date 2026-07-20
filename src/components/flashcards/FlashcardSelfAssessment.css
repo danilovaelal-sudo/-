@@ -1,0 +1,36 @@
+.flashcard-assessment {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.flashcard-assessment__btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-medium);
+  padding: 14px 8px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 56px;
+  border: 1.5px solid var(--color-border);
+}
+
+.flashcard-assessment__btn--known {
+  background: var(--color-yellow);
+  color: var(--color-blue-dark);
+  border: none;
+}
+.flashcard-assessment__btn--known:hover { background: var(--color-yellow-dark); }
+
+.flashcard-assessment__btn--review {
+  background: var(--color-blue-light);
+  color: var(--color-blue-dark);
+  border-color: var(--color-blue);
+}
+.flashcard-assessment__btn--review:hover { background: #dcebff; }

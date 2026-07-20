@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from '../../shared/Button'
 import { Icon } from '../../icons/Icon'
+import { isGroupsComplete, isGroupsOverflowing } from '../../../engine/groupsRules'
 import { SingleExerciseProps } from './exerciseTypes'
 import './GroupsExercise.css'
 
@@ -10,19 +11,33 @@ export function GroupsExercise({ fact, disabled, onAnswered }: SingleExercisePro
   const [rows, setRows] = useState(0)
   const [submitted, setSubmitted] = useState(false)
 
+  const target = fact.a
+  const isExactMatch = isGroupsComplete(rows, target)
+  const overflowHint = isGroupsOverflowing(rows, target)
+
+  function addGroup() {
+    if (disabled || submitted) return
+    setRows((r) => Math.min(MAX_ROWS, r + 1))
+  }
+
+  function removeGroup() {
+    if (disabled || submitted) return
+    setRows((r) => Math.max(0, r - 1))
+  }
+
   function handleSubmit() {
-    if (submitted) return
+    if (submitted || !isExactMatch) return
     setSubmitted(true)
-    onAnswered(rows === fact.a)
+    onAnswered(true)
   }
 
   return (
     <div className="groups-exercise">
-      <p className="groups-exercise__instruction">
-        Собери {fact.a} {groupsLabel(fact.a)} по {fact.b}
+      <p className="groups-exercise__count" aria-live="polite">
+        Собрано групп: {rows} из {target}
       </p>
 
-      <div className="groups-exercise__rows" aria-live="polite">
+      <div className="groups-exercise__rows" aria-hidden="true">
         {Array.from({ length: rows }, (_, r) => (
           <div className="groups-exercise__row" key={r}>
             {Array.from({ length: fact.b }, (_, c) => (
@@ -32,19 +47,20 @@ export function GroupsExercise({ fact, disabled, onAnswered }: SingleExercisePro
         ))}
       </div>
 
+      {overflowHint && <p className="groups-exercise__overflow">Нужно ровно {target} {groupsWord(target)}</p>}
+
       <div className="groups-exercise__controls">
         <button
           className="groups-exercise__step-btn"
-          onClick={() => setRows((r) => Math.max(0, r - 1))}
+          onClick={removeGroup}
           disabled={disabled || submitted || rows === 0}
           aria-label="Убрать группу"
         >
           −
         </button>
-        <span className="groups-exercise__count">{rows}</span>
         <button
-          className="groups-exercise__step-btn"
-          onClick={() => setRows((r) => Math.min(MAX_ROWS, r + 1))}
+          className="groups-exercise__step-btn groups-exercise__step-btn--add"
+          onClick={addGroup}
           disabled={disabled || submitted || rows >= MAX_ROWS}
           aria-label="Добавить группу"
         >
@@ -52,14 +68,14 @@ export function GroupsExercise({ fact, disabled, onAnswered }: SingleExercisePro
         </button>
       </div>
 
-      <Button variant="primary" onClick={handleSubmit} disabled={disabled || submitted || rows === 0}>
+      <Button variant="primary" onClick={handleSubmit} disabled={disabled || submitted || !isExactMatch}>
         Готово
       </Button>
     </div>
   )
 }
 
-function groupsLabel(n: number): string {
+function groupsWord(n: number): string {
   const mod10 = n % 10
   const mod100 = n % 100
   if (mod10 === 1 && mod100 !== 11) return 'группу'

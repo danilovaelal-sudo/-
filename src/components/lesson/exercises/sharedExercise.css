@@ -1,0 +1,48 @@
+.exercise-equation {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--color-blue-dark);
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 420px) {
+  .exercise-equation {
+    font-size: 2rem;
+  }
+}
+
+.exercise-equation__mark {
+  color: var(--color-orange);
+}
+
+.exercise-equation__blank {
+  display: inline-block;
+  min-width: 1.4ch;
+  color: var(--color-orange);
+  border-bottom: 3px solid var(--color-orange);
+  padding: 0 4px;
+}
+
+.exercise-equation--pulse {
+  animation: exercise-equation-pulse 1.1s ease-in-out 2;
+}
+
+@keyframes exercise-equation-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.exercise-equation--correct .exercise-equation__blank {
+  color: var(--color-text);
+  border-color: var(--color-yellow-dark);
+  background: var(--color-yellow-light);
+  border-radius: var(--radius-small);
+}
+
+.exercise-equation--incorrect .exercise-equation__blank {
+  color: var(--color-error);
+  border-color: var(--color-error);
+  background: var(--color-error-light);
+  border-radius: var(--radius-small);
+}

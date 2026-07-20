@@ -1,12 +1,12 @@
 import { orderForSettings } from '../../engine/exampleProgress'
 import { useApp } from '../../state/AppContext'
 import { TableNumber } from '../../state/types'
-import { Icon } from '../icons/Icon'
+import { LearnTabs } from './LearnTabs'
 import { TableModuleCard } from './TableModuleCard'
 import './LearnScreen.css'
 
 export function LearnScreen() {
-  const { progress, startLesson, setScreen } = useApp()
+  const { progress, startLesson } = useApp()
   const order = orderForSettings(progress.settings.order)
 
   function handleSelect(table: TableNumber) {
@@ -17,22 +17,17 @@ export function LearnScreen() {
     <div className="screen learn-screen">
       <div className="learn-screen__header">
         <h2>Учиться</h2>
-        <p>Таблицы открываются по порядку — от простых к сложным.</p>
       </div>
+
+      <LearnTabs />
+
+      <p className="learn-screen__hint">Мой путь: таблицы открываются по порядку — от простых к сложным.</p>
 
       <div className="learn-screen__list">
         {order.map((table) => (
           <TableModuleCard key={table} tableNumber={table} progress={progress} onSelect={handleSelect} />
         ))}
       </div>
-
-      <button className="card learn-screen__full-table" onClick={() => setScreen('fullTable')}>
-        <div>
-          <div style={{ fontWeight: 800 }}>Вся таблица</div>
-          <p>Справочник 2–10 для поиска и проверки примеров</p>
-        </div>
-        <Icon name="chevronRight" size={20} />
-      </button>
     </div>
   )
 }

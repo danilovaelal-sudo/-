@@ -1,7 +1,10 @@
 import { Fragment, useState } from 'react'
 import { useApp } from '../../state/AppContext'
 import { useSound } from '../../audio/useSound'
+import { isTableNumber } from '../../data/curriculum'
 import { ScreenHeader } from '../layout/ScreenHeader'
+import { LearnTabs } from '../learn/LearnTabs'
+import { Button } from '../shared/Button'
 import { MultiplicationModel } from '../lesson/MultiplicationModel'
 import { EquationDisplay } from '../lesson/EquationDisplay'
 import './FullTableScreen.css'
@@ -9,7 +12,7 @@ import './FullTableScreen.css'
 const NUMBERS = Array.from({ length: 10 }, (_, i) => i + 1)
 
 export function FullTableScreen() {
-  const { setScreen } = useApp()
+  const { setScreen, startPractice } = useApp()
   const { speak, speechSupported } = useSound()
   const [selected, setSelected] = useState<{ a: number; b: number } | null>(null)
   const [hover, setHover] = useState<{ a: number; b: number } | null>(null)
@@ -19,9 +22,12 @@ export function FullTableScreen() {
     if (speechSupported) speak(`${a} умножить на ${b} равно ${a * b}`)
   }
 
+  const practiceTableNumber = selected && isTableNumber(selected.a) ? selected.a : null
+
   return (
     <div className="screen full-table-screen">
-      <ScreenHeader title="Вся таблица" onBack={() => setScreen('learn')} />
+      <ScreenHeader title="Учиться" onBack={() => setScreen('today')} />
+      <LearnTabs />
       <p style={{ marginBottom: 12 }}>Нажми на клетку, чтобы увидеть пример и модель.</p>
 
       <div className="full-table__scroll">
@@ -66,6 +72,11 @@ export function FullTableScreen() {
         <div className="card full-table__detail">
           <EquationDisplay a={selected.a} b={selected.b} showSum={false} />
           <MultiplicationModel a={selected.a} b={selected.b} />
+          {practiceTableNumber !== null && (
+            <Button variant="secondary" onClick={() => startPractice({ mode: 'free', count: 10, tables: [practiceTableNumber] })}>
+              Тренировать таблицу на {practiceTableNumber}
+            </Button>
+          )}
         </div>
       )}
     </div>

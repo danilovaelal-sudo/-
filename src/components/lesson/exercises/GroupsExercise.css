@@ -5,10 +5,11 @@
   gap: 16px;
 }
 
-.groups-exercise__instruction {
-  text-align: center;
+.groups-exercise__overflow {
+  color: var(--color-orange-dark);
   font-weight: 700;
-  color: var(--color-text);
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 .groups-exercise__rows {
@@ -38,16 +39,15 @@
 }
 
 .groups-exercise__count {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--color-blue-dark);
-  min-width: 28px;
   text-align: center;
 }
 
 .groups-exercise__step-btn {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 1.5px solid var(--color-border);
   background: var(--color-surface);
@@ -55,5 +55,15 @@
   font-weight: 800;
   cursor: pointer;
   color: var(--color-blue-dark);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
 }
+.groups-exercise__step-btn:hover:not(:disabled) { border-color: var(--color-blue); }
+.groups-exercise__step-btn:active:not(:disabled) { transform: scale(0.94); }
 .groups-exercise__step-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.groups-exercise__step-btn--add {
+  background: var(--color-orange);
+  border-color: var(--color-orange);
+  color: #fff;
+}
+.groups-exercise__step-btn--add:hover:not(:disabled) { background: var(--color-orange-dark); }

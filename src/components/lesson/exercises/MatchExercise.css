@@ -1,43 +1,82 @@
 .match-exercise {
   display: flex;
-  gap: 24px;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.match-exercise__columns {
+  display: flex;
+  gap: 20px;
   justify-content: center;
+  width: 100%;
 }
 
 .match-exercise__column {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
+  max-width: 170px;
+}
+
+.match-exercise__heading {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .match-chip {
-  border: 1.5px solid var(--color-border);
+  border: 2px solid var(--color-border);
   background: var(--color-surface);
   border-radius: var(--radius-medium);
-  padding: 14px 20px;
+  padding: 14px 12px;
   font-size: 1.1rem;
   font-weight: 800;
   color: var(--color-text);
   cursor: pointer;
-  min-width: 88px;
-  min-height: 48px;
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  width: 100%;
+  min-height: 56px;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
 }
-.match-chip:hover:not(:disabled) { transform: translateY(-1px); }
+.match-chip:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--color-blue); }
 .match-chip:disabled { cursor: not-allowed; }
 
 .match-chip--selected {
   border-color: var(--color-blue);
-  background: var(--color-blue-light);
+  background: var(--color-blue);
+  color: #fff;
 }
 
 .match-chip--matched {
   border-color: var(--color-yellow-dark);
   background: var(--color-yellow-light);
-  opacity: 0.75;
+  color: var(--color-blue-dark);
+  opacity: 1;
+}
+
+.match-chip--pulse {
+  animation: gentle-pulse 0.5s ease;
+}
+
+.match-chip--hint {
+  border-color: var(--color-orange);
+  box-shadow: var(--glow-orange);
 }
 
 .match-chip--wrong {
   border-color: var(--color-error);
+  background: var(--color-error-light);
   animation: shake-soft 0.35s ease;
+}
+
+.match-exercise__status {
+  min-height: 22px;
+  font-weight: 700;
+  color: var(--color-blue-dark);
+  text-align: center;
 }

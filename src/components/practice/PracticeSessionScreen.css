@@ -1,12 +1,3 @@
-.practice-session__progress {
-  display: flex;
-  gap: 6px;
-  padding: 4px 4px 18px;
-}
-.practice-session__dot { height: 6px; flex: 1; border-radius: 999px; background: var(--color-border); }
-.practice-session__dot--done { background: var(--color-blue); }
-.practice-session__dot--current { background: var(--color-orange); }
-
 .practice-session__stage {
   display: flex;
   flex-direction: column;

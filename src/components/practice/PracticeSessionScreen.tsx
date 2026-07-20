@@ -8,6 +8,10 @@ import { Button } from '../shared/Button'
 import { Pix, PixMood } from '../pix/Pix'
 import { HintPanel } from '../lesson/HintPanel'
 import { FeedbackPanel } from '../lesson/FeedbackPanel'
+import { LessonProgressBar } from '../lesson/LessonProgressBar'
+import { ExerciseInstruction } from '../lesson/ExerciseInstruction'
+import { HintButton } from '../lesson/HintButton'
+import { exerciseInstructionFor } from '../lesson/exerciseCopy'
 import { ChoiceExercise } from '../lesson/exercises/ChoiceExercise'
 import { InputExercise } from '../lesson/exercises/InputExercise'
 import { FillBlankExercise } from '../lesson/exercises/FillBlankExercise'
@@ -37,6 +41,7 @@ export function PracticeSessionScreen() {
 
   const fact = facts[index]
   const exerciseType = EXERCISE_CYCLE[index % EXERCISE_CYCLE.length]
+  const instruction = fact ? exerciseInstructionFor(exerciseType, fact) : null
 
   function schedule(delayMs: number, action: () => void) {
     if (timerRef.current) clearTimeout(timerRef.current)
@@ -50,6 +55,17 @@ export function PracticeSessionScreen() {
     setIndex((i) => i + 1)
   }
 
+  function triggerHint() {
+    playHintSound()
+    setPixMood('calm')
+    setPhase('hint')
+    const hintDuration = fact.a * (fact.a > 6 ? 160 : 260) + 900
+    schedule(hintDuration, () => {
+      setPhase('question')
+      setRetry(true)
+    })
+  }
+
   function handleAnswered(correct: boolean) {
     recordAnswer(fact.a, fact.b, { correct, hintUsed: retry, supported: false })
 
@@ -58,21 +74,14 @@ export function PracticeSessionScreen() {
       playCorrect()
       setPixMood('joy')
       setPhase('feedback')
-      schedule(800, nextQuestion)
+      schedule(1000, nextQuestion)
     } else if (!retry) {
-      playHintSound()
-      setPixMood('calm')
-      setPhase('hint')
-      const hintDuration = fact.a * (fact.a > 6 ? 160 : 260) + 900
-      schedule(hintDuration, () => {
-        setPhase('question')
-        setRetry(true)
-      })
+      triggerHint()
     } else {
       stillDifficultRef.current.push(fact)
       setPixMood('calm')
       setPhase('feedback')
-      schedule(800, nextQuestion)
+      schedule(1000, nextQuestion)
     }
   }
 
@@ -97,23 +106,16 @@ export function PracticeSessionScreen() {
     <div className="screen practice-session">
       <ScreenHeader title="Тренировка" onBack={() => endFlow('practice')} />
 
-      <div className="practice-session__progress" aria-hidden="true">
-        {facts.map((_, i) => (
-          <span
-            key={i}
-            className={`practice-session__dot ${i < index ? 'practice-session__dot--done' : i === index ? 'practice-session__dot--current' : ''}`}
-          />
-        ))}
-      </div>
+      <LessonProgressBar total={facts.length} current={index} />
 
       <div className="practice-session__stage">
-        <Pix mood={phase === 'hint' ? 'calm' : pixMood} size={56} />
+        <Pix mood={phase === "hint" ? "calm" : pixMood} size={64} />
 
         {phase === 'hint' ? (
           <HintPanel fact={fact} />
         ) : (
           <>
-            <p className="lesson-screen__prompt">{fact.a} × {fact.b} = ?</p>
+            {instruction && <ExerciseInstruction title={instruction.title} subtitle={instruction.subtitle} />}
 
             {exerciseType === 'choice' && (
               <ChoiceExercise key={`${index}-${retry}`} fact={fact} disabled={phase === 'feedback'} onAnswered={handleAnswered} />
@@ -126,6 +128,7 @@ export function PracticeSessionScreen() {
             )}
 
             {phase === 'feedback' && <FeedbackPanel text={retry ? 'Идём дальше' : 'Верно'} />}
+            {phase === 'question' && <HintButton onClick={triggerHint} disabled={retry} firstTime={!retry} />}
           </>
         )}
       </div>

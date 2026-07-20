@@ -20,6 +20,10 @@ export function emptyExampleProgress(): ExampleProgress {
     lastResult: null,
     lastPracticedAt: null,
     state: 'new',
+    flashcardViews: 0,
+    selfKnownCount: 0,
+    selfReviewCount: 0,
+    lastFlashcardAt: null,
   }
 }
 
@@ -74,6 +78,20 @@ export function applyAnswer(prev: ExampleProgress, input: AnswerInput): ExampleP
   return { ...base, state: 'familiar', independentStreak: 1 }
 }
 
+/**
+ * Flashcards self-assessment is a weaker signal than a verified answer — it only
+ * updates the flashcard-specific counters, never the main mastery `state`.
+ */
+export function applyFlashcardAssessment(prev: ExampleProgress, known: boolean): ExampleProgress {
+  return {
+    ...prev,
+    flashcardViews: prev.flashcardViews + 1,
+    selfKnownCount: prev.selfKnownCount + (known ? 1 : 0),
+    selfReviewCount: prev.selfReviewCount + (known ? 0 : 1),
+    lastFlashcardAt: new Date().toISOString(),
+  }
+}
+
 export function tableFactStates(progress: Progress, tableNumber: TableNumber): ExampleProgress[] {
   const facts: ExampleProgress[] = []
   for (let b = 1; b <= 10; b++) {
@@ -84,6 +102,11 @@ export function tableFactStates(progress: Progress, tableNumber: TableNumber): E
 
 export function confidentCount(progress: Progress, tableNumber: TableNumber): number {
   return tableFactStates(progress, tableNumber).filter((f) => f.state === 'confident').length
+}
+
+/** Facts the child has met at least once (any state past "new"), regardless of mastery. */
+export function introducedCount(progress: Progress, tableNumber: TableNumber): number {
+  return tableFactStates(progress, tableNumber).filter((f) => f.state !== 'new').length
 }
 
 export function hasReviewFacts(progress: Progress, tableNumber: TableNumber): boolean {
@@ -127,6 +150,7 @@ export function overallStats(progress: Progress): {
   startedTables: number
   masteredTables: number
   totalConfidentFacts: number
+  totalIntroducedFacts: number
   totalFacts: number
   percentComplete: number
 } {
@@ -134,16 +158,18 @@ export function overallStats(progress: Progress): {
   let startedTables = 0
   let masteredTables = 0
   let totalConfidentFacts = 0
+  let totalIntroducedFacts = 0
   for (const table of order) {
     const status = tableModuleStatus(progress, table)
     if (status === 'locked') continue
     if (attemptedCount(progress, table) > 0) startedTables += 1
     if (status === 'mastered') masteredTables += 1
     totalConfidentFacts += confidentCount(progress, table)
+    totalIntroducedFacts += introducedCount(progress, table)
   }
   const totalFacts = order.length * 10
   const percentComplete = totalFacts > 0 ? Math.round((totalConfidentFacts / totalFacts) * 100) : 0
-  return { startedTables, masteredTables, totalConfidentFacts, totalFacts, percentComplete }
+  return { startedTables, masteredTables, totalConfidentFacts, totalIntroducedFacts, totalFacts, percentComplete }
 }
 
 export function allDifficultExamples(progress: Progress): { a: TableNumber; b: number; progress: ExampleProgress }[] {

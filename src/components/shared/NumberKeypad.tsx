@@ -27,30 +27,25 @@ export function NumberKeypad({ value, onChange, onConfirm, disabled, maxLength =
 
   return (
     <div className="keypad">
-      <div className="keypad__display" aria-live="polite">
-        {value || '—'}
-      </div>
-      <div className="keypad__grid">
+      <div className="keypad__digits">
         {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
           <button key={d} className="keypad__key" onClick={() => pressDigit(d)} disabled={disabled} aria-label={`Цифра ${d}`}>
             {d}
           </button>
         ))}
-        <button className="keypad__key" onClick={pressBackspace} disabled={disabled} aria-label="Удалить цифру">
+      </div>
+      <div className="keypad__bottom-row">
+        <button className="keypad__key keypad__key--wide" onClick={pressBackspace} disabled={disabled} aria-label="Удалить цифру">
           <Icon name="backspace" size={20} />
         </button>
-        <button className="keypad__key" onClick={() => pressDigit('0')} disabled={disabled} aria-label="Цифра 0">
+        <button className="keypad__key keypad__key--wide" onClick={() => pressDigit('0')} disabled={disabled} aria-label="Цифра 0">
           0
         </button>
-        <button
-          className="keypad__key keypad__key--confirm"
-          onClick={onConfirm}
-          disabled={disabled || value === ''}
-          aria-label="Подтвердить ответ"
-        >
-          <Icon name="check" size={20} />
-        </button>
       </div>
+      <button className="keypad__confirm" onClick={onConfirm} disabled={disabled || value === ''}>
+        <Icon name="check" size={18} />
+        <span>Проверить</span>
+      </button>
     </div>
   )
 }

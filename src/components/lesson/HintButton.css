@@ -1,0 +1,16 @@
+.hint-button {
+  border: none;
+  background: transparent;
+  color: var(--color-blue);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 10px 14px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-pill);
+}
+.hint-button:hover:not(:disabled) { background: var(--color-blue-light); }
+.hint-button:disabled { opacity: 0.4; cursor: not-allowed; }

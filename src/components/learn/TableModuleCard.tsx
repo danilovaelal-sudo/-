@@ -1,6 +1,6 @@
 import { CircularProgress } from '../shared/CircularProgress'
 import { Icon } from '../icons/Icon'
-import { confidentCount, hasReviewFacts, tableModuleStatus } from '../../engine/exampleProgress'
+import { confidentCount, hasReviewFacts, introducedCount, tableModuleStatus } from '../../engine/exampleProgress'
 import { Progress, TableModuleStatus, TableNumber } from '../../state/types'
 import './TableModuleCard.css'
 
@@ -29,6 +29,7 @@ export function TableModuleCard({
 }) {
   const status = tableModuleStatus(progress, tableNumber)
   const confident = confidentCount(progress, tableNumber)
+  const introduced = introducedCount(progress, tableNumber)
   const needsReview = status !== 'locked' && hasReviewFacts(progress, tableNumber)
   const locked = status === 'locked'
 
@@ -37,7 +38,7 @@ export function TableModuleCard({
       className="card table-card"
       disabled={locked}
       onClick={() => onSelect(tableNumber)}
-      aria-label={`Таблица на ${tableNumber}. ${STATUS_LABEL[status]}. Освоено ${confident} из 10.`}
+      aria-label={`Таблица на ${tableNumber}. ${STATUS_LABEL[status]}. Познакомился ${introduced} из 10, уверенно знает ${confident} из 10.`}
     >
       <CircularProgress value={confident} max={10} size={56} strokeWidth={6} color={STATUS_COLOR[status]} label="">
         {locked ? <Icon name="lock" size={18} className="table-card__lock" /> : <span className="table-card__number">×{tableNumber}</span>}
@@ -51,7 +52,7 @@ export function TableModuleCard({
           }
         >
           {needsReview ? 'Стоит повторить' : STATUS_LABEL[status]}
-          {!locked && ` · ${confident}/10`}
+          {!locked && ` · ${introduced} изучается, ${confident} уверенно`}
         </div>
       </div>
       {!locked && <Icon name="chevronRight" size={20} className="table-card__lock" />}

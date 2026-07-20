@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { buildLesson } from './lessonPlanner'
+import { emptyExampleProgress } from './exampleProgress'
 import { createDefaultProgress } from '../state/progressStore'
 
 describe('buildLesson', () => {
@@ -26,7 +27,7 @@ describe('buildLesson', () => {
         ...progress,
         examples: {
           ...progress.examples,
-          [`2x${b}`]: { attempts: 5, correct: 5, incorrect: 0, independentStreak: 3, hintUsedLast: false, lastResult: 'correct', lastPracticedAt: null, state: 'confident' },
+          [`2x${b}`]: { ...emptyExampleProgress(), attempts: 5, correct: 5, independentStreak: 3, lastResult: 'correct', state: 'confident' },
         },
       }
     }

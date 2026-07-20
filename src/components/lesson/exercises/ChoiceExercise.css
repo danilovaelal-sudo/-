@@ -16,7 +16,7 @@
   font-weight: 800;
   color: var(--color-blue-dark);
   cursor: pointer;
-  min-height: 56px;
+  min-height: 64px;
   transition: transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
 }
 .choice-option:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--color-blue); }

@@ -1,0 +1,89 @@
+.flashcard-flip {
+  width: 100%;
+  max-width: 340px;
+  height: 240px;
+  margin: 0 auto;
+  perspective: 1200px;
+}
+
+.flashcard-flip__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 480ms ease;
+  transform-style: preserve-3d;
+}
+
+.flashcard-flip--flipped .flashcard-flip__inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-large);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-medium);
+  border: none;
+  text-align: center;
+}
+
+.flashcard-face--front {
+  background: linear-gradient(160deg, var(--color-blue) 0%, var(--color-blue-dark) 100%);
+  color: #fff;
+  cursor: pointer;
+}
+
+.flashcard-face--back {
+  background: var(--color-surface);
+  border: 2px solid var(--color-yellow-dark);
+  transform: rotateY(180deg);
+  color: var(--color-text);
+}
+
+.flashcard-face__label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.flashcard-face__equation {
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.flashcard-face__answer {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--color-blue-dark);
+}
+
+.flashcard-face__hint {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* Reduced motion: swap the 3D rotation for a simple content crossfade */
+.flashcard-flip--reduced .flashcard-flip__inner {
+  transition: none;
+  transform: none !important;
+}
+.flashcard-flip--reduced .flashcard-face {
+  position: relative;
+  transform: none !important;
+  backface-visibility: visible;
+  display: none;
+}
+.flashcard-flip--reduced.flashcard-flip--flipped .flashcard-face--back,
+.flashcard-flip--reduced:not(.flashcard-flip--flipped) .flashcard-face--front {
+  display: flex;
+}
+.flashcard-flip--reduced .flashcard-flip__inner {
+  height: 100%;
+}

@@ -7,6 +7,8 @@ import { ProgressScreen } from './components/progress/ProgressScreen'
 import { SettingsScreen } from './components/settings/SettingsScreen'
 import { FullTableScreen } from './components/fulltable/FullTableScreen'
 import { LessonScreen } from './components/lesson/LessonScreen'
+import { FlashcardsSetup } from './components/flashcards/FlashcardsSetup'
+import { FlashcardSession } from './components/flashcards/FlashcardSession'
 import { useApp } from './state/AppContext'
 
 export function App() {
@@ -22,6 +24,8 @@ export function App() {
       {screen === 'settings' && <SettingsScreen />}
       {screen === 'fullTable' && <FullTableScreen />}
       {screen === 'lesson' && <LessonScreen />}
+      {screen === 'flashcardsSetup' && <FlashcardsSetup />}
+      {screen === 'flashcardsSession' && <FlashcardSession />}
     </AppShell>
   )
 }

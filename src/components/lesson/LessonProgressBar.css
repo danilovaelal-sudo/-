@@ -1,0 +1,31 @@
+.lesson-progress {
+  padding: 4px 4px 14px;
+}
+
+.lesson-progress__dots {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.lesson-progress__dot {
+  height: 6px;
+  flex: 1;
+  border-radius: 999px;
+  background: var(--color-blue-light);
+}
+
+.lesson-progress__dot--done {
+  background: var(--color-blue);
+}
+
+.lesson-progress__dot--current {
+  background: var(--color-orange);
+}
+
+.lesson-progress__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  text-align: center;
+}

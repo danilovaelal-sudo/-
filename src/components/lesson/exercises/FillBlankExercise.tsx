@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { shuffle } from '../../../engine/answers'
 import { NumberKeypad } from '../../shared/NumberKeypad'
 import { SingleExerciseProps } from './exerciseTypes'
-import './FillBlankExercise.css'
+import './sharedExercise.css'
 import './ChoiceExercise.css'
 
 type Variant = 'missingA' | 'missingB' | 'missingProduct'
@@ -26,6 +26,7 @@ export function FillBlankExercise({ fact, disabled, onAnswered }: SingleExercise
 
   const answer = variant === 'missingA' ? fact.a : variant === 'missingB' ? fact.b : product
   const options = useMemo(() => (variant !== 'missingProduct' ? factorChoices(answer) : []), [variant, answer])
+  const result = variant === 'missingProduct' ? (submitted ? (Number(value) === answer ? 'correct' : 'incorrect') : null) : null
 
   function handleChoice(value: number) {
     if (selected !== null || disabled) return
@@ -39,16 +40,20 @@ export function FillBlankExercise({ fact, disabled, onAnswered }: SingleExercise
     onAnswered(Number(value) === answer)
   }
 
+  const blankNode = <span className="exercise-equation__blank">{variant === 'missingProduct' ? value || '?' : '?'}</span>
+
   const equationLabel =
     variant === 'missingA'
-      ? [<span key="q" className="fill-blank__blank">?</span>, ` × ${fact.b} = ${product}`]
+      ? [blankNode, ` × ${fact.b} = ${product}`]
       : variant === 'missingB'
-        ? [`${fact.a} × `, <span key="q" className="fill-blank__blank">?</span>, ` = ${product}`]
-        : [`${fact.a} × ${fact.b} = `, <span key="q" className="fill-blank__blank">?</span>]
+        ? [`${fact.a} × `, blankNode, ` = ${product}`]
+        : [`${fact.a} × ${fact.b} = `, blankNode]
 
   return (
-    <div>
-      <div className="fill-blank__equation">{equationLabel}</div>
+    <div className="stack" style={{ alignItems: 'center' }}>
+      <p className={`exercise-equation exercise-equation--pulse ${result ? `exercise-equation--${result}` : ''}`}>
+        {equationLabel}
+      </p>
       {variant === 'missingProduct' ? (
         <NumberKeypad value={value} onChange={setValue} onConfirm={handleKeypadConfirm} disabled={disabled || submitted} />
       ) : (
