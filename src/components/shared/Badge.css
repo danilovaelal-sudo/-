@@ -1,0 +1,36 @@
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-soft);
+  text-align: center;
+  min-width: 110px;
+}
+
+.badge-item__icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.badge-item--locked {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+
+.badge-item--earned {
+  animation: bounce-in 0.5s ease-out;
+  box-shadow: var(--shadow-soft);
+}
+
+.badge-item__title {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.badge-item__desc {
+  font-size: 0.72rem;
+  color: var(--color-text-soft);
+}

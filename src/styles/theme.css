@@ -1,0 +1,76 @@
+:root {
+  --font-display: 'Baloo 2', 'Comic Sans MS', system-ui, sans-serif;
+
+  --color-bg-top: #fff4d6;
+  --color-bg-bottom: #cdeeff;
+  --color-surface: #ffffff;
+  --color-surface-soft: #fbf7ff;
+
+  --color-text: #2d2a4a;
+  --color-text-soft: #6a6489;
+
+  --color-primary: #6c4ce0;
+  --color-primary-dark: #4f34b3;
+  --color-secondary: #ff6b6b;
+  --color-secondary-dark: #e2504f;
+  --color-yellow: #ffca3a;
+  --color-yellow-dark: #e0a800;
+  --color-green: #4ecb71;
+  --color-green-dark: #2fa350;
+  --color-blue: #4cc9f0;
+  --color-blue-dark: #2ba8cf;
+  --color-pink: #ff8fd6;
+
+  --shadow-soft: 0 8px 20px rgba(76, 60, 140, 0.15);
+  --shadow-strong: 0 12px 28px rgba(76, 60, 140, 0.25);
+
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.3) translateY(40px); opacity: 0; }
+  60% { transform: scale(1.08) translateY(-6px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(6deg); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(78, 203, 113, 0.5); }
+  50% { box-shadow: 0 0 0 14px rgba(78, 203, 113, 0); }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(320px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,48 @@
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-soft);
+}
+
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.app-header__stars {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-surface-soft);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-weight: 700;
+}
+
+.app-header__sound-btn {
+  border: none;
+  background: var(--color-surface-soft);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+}
+
+.app-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
