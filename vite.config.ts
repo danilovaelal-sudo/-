@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
+// Base path matches the GitHub Pages project URL: https://<user>.github.io/-/
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-})
+  base: command === 'build' ? '/-/' : '/',
+}))
