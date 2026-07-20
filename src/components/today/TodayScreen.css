@@ -1,0 +1,83 @@
+.today-screen__greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.today-screen__greeting-text {
+  font-size: 1.3rem;
+}
+
+.lesson-card {
+  background: linear-gradient(160deg, var(--color-blue-light) 0%, #ffffff 70%);
+  border-radius: var(--radius-large);
+  padding: 22px;
+  box-shadow: var(--shadow-small);
+  border: 1px solid var(--color-border);
+}
+
+.lesson-card__table {
+  font-size: 1.5rem;
+  color: var(--color-blue-dark);
+  margin-bottom: 4px;
+}
+
+.lesson-card__meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+}
+
+.lesson-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lesson-card__progress {
+  margin: 14px 0;
+}
+
+.today-screen__section-title {
+  margin: 24px 0 10px;
+  font-size: 1.05rem;
+}
+
+.review-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.review-card__fact {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-orange-dark);
+}
+
+.today-screen__overview {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.today-screen__overview .card {
+  flex: 1;
+  text-align: center;
+  padding: 14px;
+}
+
+.today-screen__overview-value {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-blue-dark);
+}
+
+.today-screen__overview-label {
+  font-size: 0.75rem;
+}

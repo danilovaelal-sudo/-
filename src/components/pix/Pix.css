@@ -1,0 +1,71 @@
+.pix {
+  display: block;
+  overflow: visible;
+}
+
+.pix__body {
+  transform-origin: 32px 34px;
+}
+
+.pix__cell {
+  transition: transform var(--transition-normal);
+}
+
+.pix__accent {
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.pix--neutral .pix__accent { opacity: 0; }
+
+.pix--greeting .pix__cell--left {
+  animation: pix-wave 1.1s ease-in-out;
+}
+
+.pix--thinking .pix__eye {
+  transform: translateY(-1.5px);
+}
+.pix--thinking .pix__accent {
+  opacity: 1;
+  animation: pix-blink 1.6s ease-in-out infinite;
+}
+
+.pix--hint .pix__accent {
+  opacity: 1;
+  animation: pix-glow 1.4s ease-in-out infinite;
+}
+
+.pix--joy .pix__body {
+  animation: pix-pop 0.5s ease-out;
+}
+.pix--joy .pix__accent { opacity: 1; }
+
+.pix--calm .pix__body {
+  animation: pix-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes pix-wave {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-4px) rotate(-8deg); }
+  60% { transform: translateY(-2px) rotate(6deg); }
+}
+
+@keyframes pix-blink {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@keyframes pix-glow {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.25); opacity: 1; }
+}
+
+@keyframes pix-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pix-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}

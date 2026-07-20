@@ -1,0 +1,41 @@
+.lesson-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 12px 0 24px;
+}
+
+.lesson-summary__headline {
+  font-size: 1.3rem;
+}
+
+.lesson-summary__list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.lesson-summary__chip {
+  background: var(--color-blue-light);
+  color: var(--color-blue-dark);
+  border-radius: var(--radius-pill);
+  padding: 8px 14px;
+  font-weight: 700;
+}
+
+.lesson-summary__chip--review {
+  background: var(--color-orange-light);
+  color: var(--color-orange-dark);
+}
+
+.lesson-summary__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 8px;
+}

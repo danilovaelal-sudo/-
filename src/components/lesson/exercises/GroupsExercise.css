@@ -1,0 +1,59 @@
+.groups-exercise {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.groups-exercise__instruction {
+  text-align: center;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.groups-exercise__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 40px;
+}
+
+.groups-exercise__row {
+  display: flex;
+  gap: 6px;
+  animation: rise-in var(--transition-fast);
+}
+
+.groups-exercise__cell {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: var(--color-blue);
+}
+
+.groups-exercise__controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.groups-exercise__count {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-blue-dark);
+  min-width: 28px;
+  text-align: center;
+}
+
+.groups-exercise__step-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  color: var(--color-blue-dark);
+}
+.groups-exercise__step-btn:disabled { opacity: 0.4; cursor: not-allowed; }

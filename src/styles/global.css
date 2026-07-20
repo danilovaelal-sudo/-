@@ -12,14 +12,30 @@ body {
   margin: 0;
   font-family: var(--font-display);
   color: var(--color-text);
-  background: linear-gradient(160deg, var(--color-bg-top) 0%, var(--color-bg-bottom) 100%);
+  background: var(--color-background);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  font-variant-numeric: tabular-nums;
 }
 
-button {
+button, input {
   font-family: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-small);
 }
 
 .app-shell {
@@ -32,91 +48,132 @@ button {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px 16px 100px;
-  max-width: 960px;
+  align-items: stretch;
+  padding: 16px 16px calc(96px + env(safe-area-inset-bottom));
+  max-width: 720px;
   width: 100%;
   margin: 0 auto;
 }
 
+@media (min-width: 960px) {
+  .app-main {
+    max-width: 880px;
+    padding-bottom: 48px;
+  }
+}
+
 .screen {
   width: 100%;
-  animation: bounce-in 0.45s ease-out;
+  animation: rise-in var(--transition-normal);
 }
-
-/* Shared button */
-.btn {
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 14px 28px;
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 1.1rem;
-  cursor: pointer;
-  color: #fff;
-  box-shadow: var(--shadow-soft);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-  min-height: 52px;
-  touch-action: manipulation;
-}
-
-.btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  filter: brightness(1.05);
-}
-
-.btn:active {
-  transform: translateY(1px) scale(0.98);
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-primary { background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); }
-.btn-secondary { background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-dark)); }
-.btn-yellow { background: linear-gradient(135deg, var(--color-yellow), var(--color-yellow-dark)); color: var(--color-text); }
-.btn-green { background: linear-gradient(135deg, var(--color-green), var(--color-green-dark)); }
-.btn-blue { background: linear-gradient(135deg, var(--color-blue), var(--color-blue-dark)); }
-.btn-ghost {
-  background: var(--color-surface);
-  color: var(--color-primary);
-  box-shadow: var(--shadow-soft);
-}
-
-.btn-lg {
-  padding: 20px 36px;
-  font-size: 1.4rem;
-  border-radius: var(--radius-lg);
-}
-
-/* Card */
-.card {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-  padding: 24px;
-}
-
-/* Utility */
-.stack { display: flex; flex-direction: column; gap: 16px; }
-.row { display: flex; align-items: center; gap: 12px; }
-.center { display: flex; align-items: center; justify-content: center; }
-.text-center { text-align: center; }
-.grow { flex: 1; }
 
 h1, h2, h3 {
   margin: 0;
   font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 p {
   margin: 0;
-  color: var(--color-text-soft);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
 }
 
-@media (max-width: 480px) {
-  .btn-lg { padding: 16px 24px; font-size: 1.15rem; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.center { display: flex; align-items: center; justify-content: center; }
+.text-center { text-align: center; }
+.grow { flex: 1; }
+.wrap { flex-wrap: wrap; }
+
+/* Buttons */
+.btn {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 14px 24px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  min-height: 48px;
+  min-width: 44px;
+  touch-action: manipulation;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast), background var(--transition-fast);
+}
+
+.btn:hover:not(:disabled) { transform: translateY(-1px); }
+.btn:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.btn-primary {
+  background: var(--color-orange);
+  color: #ffffff;
+  box-shadow: var(--shadow-small);
+}
+.btn-primary:hover:not(:disabled) { background: var(--color-orange-dark); box-shadow: var(--shadow-medium); }
+
+.btn-secondary {
+  background: var(--color-blue-light);
+  color: var(--color-blue-dark);
+}
+.btn-secondary:hover:not(:disabled) { background: #dcebff; }
+
+.btn-outline {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+}
+.btn-outline:hover:not(:disabled) { border-color: var(--color-blue); color: var(--color-blue); }
+
+.btn-quiet {
+  background: transparent;
+  color: var(--color-text-secondary);
+  padding: 10px 16px;
+  min-height: 44px;
+}
+.btn-quiet:hover:not(:disabled) { color: var(--color-text); }
+
+.btn-lg {
+  padding: 18px 32px;
+  font-size: 1.15rem;
+  border-radius: var(--radius-large);
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-surface);
+  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-small);
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+.icon-btn:hover:not(:disabled) { background: var(--color-blue-light); color: var(--color-blue); }
+.icon-btn:active:not(:disabled) { transform: scale(0.94); }
+.icon-btn[aria-pressed="true"] { background: var(--color-blue-light); color: var(--color-blue); }
+.icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Card */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-small);
+  border: 1px solid var(--color-border);
+  padding: 20px;
+}
+
+.card-flat {
+  background: var(--color-blue-light);
+  border-radius: var(--radius-large);
+  padding: 20px;
+}
+
+@media (max-width: 420px) {
+  .btn-lg { padding: 15px 22px; font-size: 1.05rem; }
+  .card { padding: 16px; }
 }

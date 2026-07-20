@@ -1,0 +1,39 @@
+.lesson-screen__progress {
+  display: flex;
+  gap: 6px;
+  padding: 4px 4px 18px;
+}
+
+.lesson-screen__dot {
+  height: 6px;
+  flex: 1;
+  border-radius: 999px;
+  background: var(--color-border);
+}
+
+.lesson-screen__dot--done {
+  background: var(--color-blue);
+}
+
+.lesson-screen__dot--current {
+  background: var(--color-orange);
+}
+
+.lesson-screen__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  min-height: 320px;
+  justify-content: center;
+}
+
+.lesson-screen__prompt {
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.lesson-screen__pix {
+  display: flex;
+  justify-content: center;
+}

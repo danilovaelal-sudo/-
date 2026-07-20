@@ -1,0 +1,43 @@
+.match-exercise {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.match-exercise__column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.match-chip {
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: var(--radius-medium);
+  padding: 14px 20px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-text);
+  cursor: pointer;
+  min-width: 88px;
+  min-height: 48px;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+.match-chip:hover:not(:disabled) { transform: translateY(-1px); }
+.match-chip:disabled { cursor: not-allowed; }
+
+.match-chip--selected {
+  border-color: var(--color-blue);
+  background: var(--color-blue-light);
+}
+
+.match-chip--matched {
+  border-color: var(--color-yellow-dark);
+  background: var(--color-yellow-light);
+  opacity: 0.75;
+}
+
+.match-chip--wrong {
+  border-color: var(--color-error);
+  animation: shake-soft 0.35s ease;
+}

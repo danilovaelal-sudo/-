@@ -1,26 +1,27 @@
-import { Header } from './components/layout/Header'
-import { NavBar } from './components/layout/NavBar'
-import { BadgeToast } from './components/shared/BadgeToast'
-import { HomeScreen } from './components/home/HomeScreen'
-import { TableScreen } from './components/table/TableScreen'
-import { QuizScreen } from './components/quiz/QuizScreen'
+import { AppShell } from './components/layout/AppShell'
+import { TodayScreen } from './components/today/TodayScreen'
+import { LearnScreen } from './components/learn/LearnScreen'
+import { PracticeScreen } from './components/practice/PracticeScreen'
+import { PracticeSessionScreen } from './components/practice/PracticeSessionScreen'
 import { ProgressScreen } from './components/progress/ProgressScreen'
+import { SettingsScreen } from './components/settings/SettingsScreen'
+import { FullTableScreen } from './components/fulltable/FullTableScreen'
+import { LessonScreen } from './components/lesson/LessonScreen'
 import { useApp } from './state/AppContext'
 
 export function App() {
   const { screen } = useApp()
 
   return (
-    <div className="app-shell">
-      <Header />
-      <main className="app-main">
-        {screen === 'home' && <HomeScreen />}
-        {screen === 'table' && <TableScreen />}
-        {screen === 'quiz' && <QuizScreen />}
-        {screen === 'progress' && <ProgressScreen />}
-      </main>
-      <NavBar />
-      <BadgeToast />
-    </div>
+    <AppShell>
+      {screen === 'today' && <TodayScreen />}
+      {screen === 'learn' && <LearnScreen />}
+      {screen === 'practice' && <PracticeScreen />}
+      {screen === 'practiceSession' && <PracticeSessionScreen />}
+      {screen === 'progress' && <ProgressScreen />}
+      {screen === 'settings' && <SettingsScreen />}
+      {screen === 'fullTable' && <FullTableScreen />}
+      {screen === 'lesson' && <LessonScreen />}
+    </AppShell>
   )
 }

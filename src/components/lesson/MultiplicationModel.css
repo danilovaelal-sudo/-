@@ -1,0 +1,38 @@
+.model {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  transition: opacity var(--transition-normal);
+}
+
+.model--hidden {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+}
+
+.model__row {
+  display: flex;
+  gap: 6px;
+  border-radius: var(--radius-medium);
+  padding: 3px;
+  transition: background var(--transition-fast);
+}
+
+.model__row--active {
+  background: var(--color-blue-light);
+}
+
+.model__cell {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: var(--color-blue);
+  animation: cell-glow 0.35s ease backwards;
+}
+
+@media (min-width: 480px) {
+  .model__cell { width: 20px; height: 20px; }
+}

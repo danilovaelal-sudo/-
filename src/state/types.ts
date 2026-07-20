@@ -1,34 +1,82 @@
-export type Screen = 'home' | 'table' | 'quiz' | 'progress'
+export type Screen = 'today' | 'learn' | 'practice' | 'progress' | 'settings' | 'fullTable' | 'lesson' | 'practiceSession'
 
-export type NumberStats = {
+export const TABLE_NUMBERS = [2, 3, 4, 5, 6, 7, 8, 9, 10] as const
+export type TableNumber = (typeof TABLE_NUMBERS)[number]
+
+export const CUSTOM_ORDER: TableNumber[] = [2, 5, 10, 3, 4, 6, 9, 7, 8]
+export const SCHOOL_ORDER: TableNumber[] = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+export type LearningOrder = 'custom' | 'school'
+
+/** Mastery state of a single multiplication fact, e.g. 3x4. */
+export type ExampleState = 'new' | 'learning' | 'familiar' | 'confident' | 'review'
+
+export type ExampleProgress = {
   attempts: number
   correct: number
-  masteryStars: 0 | 1 | 2 | 3
+  incorrect: number
+  independentStreak: number
+  hintUsedLast: boolean
+  lastResult: 'correct' | 'incorrect' | null
+  lastPracticedAt: string | null
+  state: ExampleState
+}
+
+export type ExampleKey = `${number}x${number}`
+
+export type SessionRecord = {
+  date: string
+  tableNumber: TableNumber
+  durationSec: number
+  completedCount: number
+  newlyMastered: number
+}
+
+export type Settings = {
+  childName: string
+  soundEnabled: boolean
+  reducedMotion: boolean
+  order: LearningOrder
+  defaultQuestionCount: 5 | 10 | 15
 }
 
 export type Progress = {
-  statsByNumber: Record<number, NumberStats>
-  totalStars: number
-  badges: string[]
-  bestStreak: number
-  currentStreak: number
-  soundEnabled: boolean
-  lastPlayedAt: string
+  version: 2
+  examples: Record<ExampleKey, ExampleProgress>
+  settings: Settings
+  streakDays: number
+  lastActiveDate: string | null
+  sessions: SessionRecord[]
 }
 
-export type Badge = {
-  id: string
-  title: string
-  description: string
-  icon: string
+export type TableModuleStatus = 'locked' | 'available' | 'in_progress' | 'mastered'
+
+export function exampleKey(a: number, b: number): ExampleKey {
+  return `${a}x${b}`
 }
 
-export type QuizQuestion = {
-  a: number
-  b: number
-  answer: number
-  options: number[]
+export type ExerciseType = 'choice' | 'input' | 'groups' | 'fillBlank' | 'match'
+export type SupportLevel = 'full' | 'partial' | 'none'
+
+export type Fact = { a: number; b: number }
+
+export type LessonStep =
+  | { kind: 'explain'; fact: Fact }
+  | {
+      kind: 'question'
+      id: string
+      fact: Fact
+      exercise: ExerciseType
+      support: SupportLevel
+      matchPairs?: Fact[]
+    }
+  | { kind: 'summary' }
+
+export type PracticeMode = 'hard' | 'mixed' | 'free'
+
+export type PracticeConfig = {
+  mode: PracticeMode
+  count: 5 | 10 | 15
+  tables?: TableNumber[]
 }
 
-export const TABLE_MIN = 1
-export const TABLE_MAX = 10

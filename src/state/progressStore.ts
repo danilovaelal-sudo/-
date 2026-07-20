@@ -1,41 +1,48 @@
-import { computeEarnedBadges, computeMasteryStars, totalStarsFromStats } from '../engine/mastery'
-import { NumberStats, Progress, TABLE_MAX, TABLE_MIN } from './types'
+import { emptyExampleProgress } from '../engine/exampleProgress'
+import { applyAnswer } from '../engine/exampleProgress'
+import { ExampleKey, Progress, SessionRecord, Settings, exampleKey } from './types'
 
-const STORAGE_KEY = 'multiplication-app:progress:v1'
+const STORAGE_KEY = 'umno:progress:v2'
+const MAX_SESSIONS = 20
 
-function emptyStats(): NumberStats {
-  return { attempts: 0, correct: 0, masteryStars: 0 }
+function defaultSettings(): Settings {
+  return {
+    childName: '',
+    soundEnabled: true,
+    reducedMotion: false,
+    order: 'custom',
+    defaultQuestionCount: 10,
+  }
 }
 
-export function createEmptyProgress(): Progress {
-  const statsByNumber: Record<number, NumberStats> = {}
-  for (let n = TABLE_MIN; n <= TABLE_MAX; n++) {
-    statsByNumber[n] = emptyStats()
-  }
+export function createDefaultProgress(): Progress {
   return {
-    statsByNumber,
-    totalStars: 0,
-    badges: [],
-    bestStreak: 0,
-    currentStreak: 0,
-    soundEnabled: true,
-    lastPlayedAt: new Date().toISOString(),
+    version: 2,
+    examples: {},
+    settings: defaultSettings(),
+    streakDays: 0,
+    lastActiveDate: null,
+    sessions: [],
   }
 }
 
 export function loadProgress(): Progress {
+  const fallback = createDefaultProgress()
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return createEmptyProgress()
-    const parsed = JSON.parse(raw) as Progress
-    const base = createEmptyProgress()
+    if (!raw) return fallback
+    const parsed = JSON.parse(raw)
+    if (!parsed || parsed.version !== 2 || typeof parsed !== 'object') return fallback
     return {
-      ...base,
-      ...parsed,
-      statsByNumber: { ...base.statsByNumber, ...parsed.statsByNumber },
+      version: 2,
+      examples: typeof parsed.examples === 'object' && parsed.examples ? parsed.examples : {},
+      settings: { ...fallback.settings, ...(parsed.settings ?? {}) },
+      streakDays: typeof parsed.streakDays === 'number' ? parsed.streakDays : 0,
+      lastActiveDate: typeof parsed.lastActiveDate === 'string' ? parsed.lastActiveDate : null,
+      sessions: Array.isArray(parsed.sessions) ? parsed.sessions : [],
     }
   } catch {
-    return createEmptyProgress()
+    return fallback
   }
 }
 
@@ -47,37 +54,47 @@ export function saveProgress(progress: Progress): void {
   }
 }
 
-export function recordAnswer(progress: Progress, tableNumber: number, wasCorrect: boolean): Progress {
-  const prevStats = progress.statsByNumber[tableNumber] ?? emptyStats()
-  const nextStats: NumberStats = {
-    attempts: prevStats.attempts + 1,
-    correct: prevStats.correct + (wasCorrect ? 1 : 0),
-    masteryStars: 0,
-  }
-  nextStats.masteryStars = computeMasteryStars(nextStats)
-
-  const statsByNumber = { ...progress.statsByNumber, [tableNumber]: nextStats }
-  const currentStreak = wasCorrect ? progress.currentStreak + 1 : 0
-  const bestStreak = Math.max(progress.bestStreak, currentStreak)
-
-  const next: Progress = {
-    ...progress,
-    statsByNumber,
-    currentStreak,
-    bestStreak,
-    totalStars: totalStarsFromStats(statsByNumber),
-    lastPlayedAt: new Date().toISOString(),
-  }
-  next.badges = computeEarnedBadges(next)
-  return next
-}
-
-export function toggleSound(progress: Progress): Progress {
-  return { ...progress, soundEnabled: !progress.soundEnabled }
-}
-
 export function resetProgress(): Progress {
-  const fresh = createEmptyProgress()
+  const fresh = createDefaultProgress()
   saveProgress(fresh)
   return fresh
+}
+
+export function updateSettings(progress: Progress, patch: Partial<Settings>): Progress {
+  return { ...progress, settings: { ...progress.settings, ...patch } }
+}
+
+type AnswerInput = { correct: boolean; hintUsed: boolean; supported: boolean }
+
+export function recordExampleAnswer(progress: Progress, a: number, b: number, input: AnswerInput): Progress {
+  const key: ExampleKey = exampleKey(a, b)
+  const prev = progress.examples[key] ?? emptyExampleProgress()
+  const next = applyAnswer(prev, input)
+  return { ...progress, examples: { ...progress.examples, [key]: next } }
+}
+
+function todayDateOnly(): string {
+  return new Date().toISOString().slice(0, 10)
+}
+
+function isYesterday(dateOnly: string): boolean {
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  return dateOnly === yesterday.toISOString().slice(0, 10)
+}
+
+export function recordSession(progress: Progress, session: Omit<SessionRecord, 'date'>): Progress {
+  const today = todayDateOnly()
+  let streakDays = progress.streakDays
+  if (progress.lastActiveDate === today) {
+    // already counted today
+  } else if (progress.lastActiveDate && isYesterday(progress.lastActiveDate)) {
+    streakDays += 1
+  } else {
+    streakDays = 1
+  }
+
+  const sessions = [{ ...session, date: today }, ...progress.sessions].slice(0, MAX_SESSIONS)
+
+  return { ...progress, streakDays, lastActiveDate: today, sessions }
 }

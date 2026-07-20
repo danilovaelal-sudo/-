@@ -1,0 +1,21 @@
+.equation {
+  text-align: center;
+}
+
+.equation__sum {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.equation__result {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-blue-dark);
+  animation: pop-in var(--transition-normal);
+}

@@ -1,0 +1,14 @@
+.hint-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: var(--radius-large);
+  background: var(--color-blue-light);
+}
+
+.hint-panel__lead {
+  font-weight: 700;
+  color: var(--color-blue-dark);
+}

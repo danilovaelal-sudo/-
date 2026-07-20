@@ -1,37 +1,51 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useReducer } from 'react'
-import { BADGES } from '../engine/mastery'
-import { loadProgress, recordAnswer as recordAnswerInStore, resetProgress as resetProgressInStore, saveProgress, toggleSound as toggleSoundInStore } from './progressStore'
-import { Progress, Screen } from './types'
+import {
+  loadProgress,
+  recordExampleAnswer,
+  recordSession as recordSessionInStore,
+  resetProgress as resetProgressInStore,
+  saveProgress,
+  updateSettings as updateSettingsInStore,
+} from './progressStore'
+import { PracticeConfig, Progress, Screen, SessionRecord, Settings, TableNumber } from './types'
 
 type State = {
   screen: Screen
   progress: Progress
-  lastEarnedBadgeId: string | null
+  activeLessonTable: TableNumber | null
+  activePracticeConfig: PracticeConfig | null
 }
+
+type AnswerInput = { correct: boolean; hintUsed: boolean; supported: boolean }
 
 type Action =
   | { type: 'SET_SCREEN'; screen: Screen }
-  | { type: 'RECORD_ANSWER'; tableNumber: number; correct: boolean }
-  | { type: 'TOGGLE_SOUND' }
+  | { type: 'RECORD_ANSWER'; a: number; b: number; input: AnswerInput }
+  | { type: 'UPDATE_SETTINGS'; patch: Partial<Settings> }
   | { type: 'RESET_PROGRESS' }
-  | { type: 'CLEAR_NEW_BADGE' }
+  | { type: 'RECORD_SESSION'; session: Omit<SessionRecord, 'date'> }
+  | { type: 'START_LESSON'; table: TableNumber }
+  | { type: 'START_PRACTICE'; config: PracticeConfig }
+  | { type: 'END_FLOW'; nextScreen: Screen }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'SET_SCREEN':
       return { ...state, screen: action.screen }
-    case 'RECORD_ANSWER': {
-      const prevBadges = new Set(state.progress.badges)
-      const nextProgress = recordAnswerInStore(state.progress, action.tableNumber, action.correct)
-      const newlyEarned = nextProgress.badges.find((id) => !prevBadges.has(id)) ?? null
-      return { ...state, progress: nextProgress, lastEarnedBadgeId: newlyEarned }
-    }
-    case 'TOGGLE_SOUND':
-      return { ...state, progress: toggleSoundInStore(state.progress) }
+    case 'RECORD_ANSWER':
+      return { ...state, progress: recordExampleAnswer(state.progress, action.a, action.b, action.input) }
+    case 'UPDATE_SETTINGS':
+      return { ...state, progress: updateSettingsInStore(state.progress, action.patch) }
     case 'RESET_PROGRESS':
       return { ...state, progress: resetProgressInStore() }
-    case 'CLEAR_NEW_BADGE':
-      return { ...state, lastEarnedBadgeId: null }
+    case 'RECORD_SESSION':
+      return { ...state, progress: recordSessionInStore(state.progress, action.session) }
+    case 'START_LESSON':
+      return { ...state, screen: 'lesson', activeLessonTable: action.table }
+    case 'START_PRACTICE':
+      return { ...state, screen: 'practiceSession', activePracticeConfig: action.config }
+    case 'END_FLOW':
+      return { ...state, screen: action.nextScreen, activeLessonTable: null, activePracticeConfig: null }
     default:
       return state
   }
@@ -40,53 +54,72 @@ function reducer(state: State, action: Action): State {
 type AppContextValue = {
   screen: Screen
   progress: Progress
+  activeLessonTable: TableNumber | null
+  activePracticeConfig: PracticeConfig | null
   setScreen: (screen: Screen) => void
-  recordAnswer: (tableNumber: number, correct: boolean) => void
-  toggleSound: () => void
+  recordAnswer: (a: number, b: number, input: AnswerInput) => void
+  updateSettings: (patch: Partial<Settings>) => void
   resetProgress: () => void
-  newlyEarnedBadge: ReturnType<typeof getBadgeById>
-  clearNewBadge: () => void
-}
-
-function getBadgeById(id: string | null) {
-  if (!id) return null
-  return BADGES.find((b) => b.id === id) ?? null
+  recordSession: (session: Omit<SessionRecord, 'date'>) => void
+  startLesson: (table: TableNumber) => void
+  startPractice: (config: PracticeConfig) => void
+  endFlow: (nextScreen: Screen) => void
 }
 
 const AppContext = createContext<AppContextValue | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, () => ({
-    screen: 'home' as Screen,
+    screen: 'today' as Screen,
     progress: loadProgress(),
-    lastEarnedBadgeId: null,
+    activeLessonTable: null,
+    activePracticeConfig: null,
   }))
 
   useEffect(() => {
     saveProgress(state.progress)
   }, [state.progress])
 
+  useEffect(() => {
+    const root = document.documentElement
+    if (state.progress.settings.reducedMotion) {
+      root.classList.add('reduced-motion')
+    } else {
+      root.classList.remove('reduced-motion')
+    }
+  }, [state.progress.settings.reducedMotion])
+
   const setScreen = useCallback((screen: Screen) => dispatch({ type: 'SET_SCREEN', screen }), [])
   const recordAnswer = useCallback(
-    (tableNumber: number, correct: boolean) => dispatch({ type: 'RECORD_ANSWER', tableNumber, correct }),
+    (a: number, b: number, input: AnswerInput) => dispatch({ type: 'RECORD_ANSWER', a, b, input }),
     [],
   )
-  const toggleSound = useCallback(() => dispatch({ type: 'TOGGLE_SOUND' }), [])
+  const updateSettings = useCallback((patch: Partial<Settings>) => dispatch({ type: 'UPDATE_SETTINGS', patch }), [])
   const resetProgress = useCallback(() => dispatch({ type: 'RESET_PROGRESS' }), [])
-  const clearNewBadge = useCallback(() => dispatch({ type: 'CLEAR_NEW_BADGE' }), [])
+  const recordSession = useCallback(
+    (session: Omit<SessionRecord, 'date'>) => dispatch({ type: 'RECORD_SESSION', session }),
+    [],
+  )
+  const startLesson = useCallback((table: TableNumber) => dispatch({ type: 'START_LESSON', table }), [])
+  const startPractice = useCallback((config: PracticeConfig) => dispatch({ type: 'START_PRACTICE', config }), [])
+  const endFlow = useCallback((nextScreen: Screen) => dispatch({ type: 'END_FLOW', nextScreen }), [])
 
   const value = useMemo<AppContextValue>(
     () => ({
       screen: state.screen,
       progress: state.progress,
+      activeLessonTable: state.activeLessonTable,
+      activePracticeConfig: state.activePracticeConfig,
       setScreen,
       recordAnswer,
-      toggleSound,
+      updateSettings,
       resetProgress,
-      newlyEarnedBadge: getBadgeById(state.lastEarnedBadgeId),
-      clearNewBadge,
+      recordSession,
+      startLesson,
+      startPractice,
+      endFlow,
     }),
-    [state, setScreen, recordAnswer, toggleSound, resetProgress, clearNewBadge],
+    [state, setScreen, recordAnswer, updateSettings, resetProgress, recordSession, startLesson, startPractice, endFlow],
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

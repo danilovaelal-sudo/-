@@ -1,6 +1,6 @@
-import { ButtonHTMLAttributes } from 'react'
+import { ButtonHTMLAttributes, forwardRef } from 'react'
 
-type Variant = 'primary' | 'secondary' | 'yellow' | 'green' | 'blue' | 'ghost'
+type Variant = 'primary' | 'secondary' | 'outline' | 'quiet'
 type Size = 'md' | 'lg'
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -8,11 +8,14 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: Size
 }
 
-export function Button({ variant = 'primary', size = 'md', className = '', children, ...rest }: Props) {
+export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+  { variant = 'primary', size = 'md', className = '', children, ...rest },
+  ref,
+) {
   const classes = ['btn', `btn-${variant}`, size === 'lg' ? 'btn-lg' : '', className].filter(Boolean).join(' ')
   return (
-    <button className={classes} {...rest}>
+    <button ref={ref} className={classes} {...rest}>
       {children}
     </button>
   )
-}
+})

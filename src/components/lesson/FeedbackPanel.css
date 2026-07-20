@@ -1,0 +1,17 @@
+.feedback-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-medium);
+  background: var(--color-yellow-light);
+  color: var(--color-text);
+  font-weight: 800;
+  font-size: 1.05rem;
+  animation: pop-in var(--transition-normal);
+}
+
+.feedback-panel__icon {
+  color: var(--color-yellow-dark);
+}
